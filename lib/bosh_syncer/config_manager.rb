@@ -1,6 +1,6 @@
 module BoshSyncer
   module ConfigManager
-    def config_manager()
+    def config_manager
        BoshSyncer::ReleaseManager::ReleaseManager.new
     end
 

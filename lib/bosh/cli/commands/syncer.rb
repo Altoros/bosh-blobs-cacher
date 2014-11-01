@@ -5,7 +5,7 @@ module Bosh::Cli::Command
   class Syncer < Bosh::Cli::Command::Base
     include BoshSyncer::ConfigManager
     include BoshSyncer::ReleaseManager
-
+    include BoshSyncer::Helpers
 
     usage 'cache'
     desc 'show bosh cache sub-commands'
@@ -13,7 +13,6 @@ module Bosh::Cli::Command
       say "bosh cache sub-commands:\n"
       commands = Bosh::Cli::Config.commands.values.find_all { |command| command.usage =~ /^cache/ }
       Bosh::Cli::Command::Help.list_commands(commands)
-      puts self.methods 
     end
 
     usage 'cache blobs'
@@ -28,15 +27,15 @@ module Bosh::Cli::Command
         exit 1
       end
 
+      
       release_manager.fetch(options[:release] || default_release) do |release_folder|
-        say "release_folder: #{release_folder}"
-        update_config!
-        
+        set_folder(release_folder)
+
         blob_manager.sync
         blob_manager.print_status
         
         config_manager.setup(options[:config]) do
-          update_config!
+          update_config
           blob_manager.blobs_to_upload.each do |blob|
             say "Uploading blob #{blob.make_yellow}? to your blobstore."
             blob_manager.upload_blob(blob)
@@ -51,8 +50,5 @@ module Bosh::Cli::Command
       "https://github.com/cloudfoundry/cf-release.git"
     end
 
-    def update_config!
-      @release = nil
-    end
   end
 end

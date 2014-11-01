@@ -7,7 +7,7 @@ module BoshSyncer
     end
 
     class ReleaseManager
-      def fetch(repo, options = {branch: 'master'})
+      def fetch(repo, options = {branch: 'master'}, &block)
         temp_folder = nil
         current_folder = FileUtils.pwd
 
@@ -18,13 +18,9 @@ module BoshSyncer
         else
           repo
         end
-
-        FileUtils.chdir(release_folder)
-
+        
         yield(release_folder)
 
-        FileUtils.chdir(current_folder)
-        FileUtils.rm(temp_folder) if temp_folder
       end
 
       def url?(repo)
@@ -34,6 +30,7 @@ module BoshSyncer
       def git_url_regexp
         /^((git|ssh|http(s)?)|(git@[\w.]+))(:\/\/)?([\w\.@\:\/\-\~]+)(.git)(\/)?/
       end
+
     end
   end
 end
