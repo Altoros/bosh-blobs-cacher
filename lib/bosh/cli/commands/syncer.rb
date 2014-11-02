@@ -1,5 +1,6 @@
 require 'bosh_syncer/release_manager'
 require 'bosh_syncer/config_manager'
+require 'bosh_syncer/config_renderer'
 
 module Bosh::Cli::Command
   class Syncer < Bosh::Cli::Command::Base
@@ -7,7 +8,7 @@ module Bosh::Cli::Command
     include BoshSyncer::ReleaseManager
     include BoshSyncer::Helpers
 
-    usage 'cache'
+    usage 'cacher'
     desc 'show bosh cache sub-commands'
     def help
       say "bosh cache sub-commands:\n"
@@ -20,7 +21,7 @@ module Bosh::Cli::Command
     option '--release release', String, 'BOSH release that you want to cache (folder or github repo). ' + 
                                         'By default is set cf-release github repo.'
     option '--config config_file', String,  'Config file to access your blob storage.'
-    def cache_blobs(*args)
+    def cache_blobs
 
       unless options[:config]
         say "You need to specify config file with --cache option.".make_red
@@ -42,6 +43,15 @@ module Bosh::Cli::Command
           end
         end
       end
+    end
+
+    usage 'cacher generate config'
+    desc 'upload blobs from specific release and store them in your blobstorage.'
+    option '--provider provider', String, '.'
+    def generate_example_config(path = Dir.pwd)
+      path = File.join(path, 'config.yml') if File.directory?(path)
+      config_renderer = BoshSyncer::ConfigRenderer.new(options.merge!(validate: false))
+      config_renderer.render_example_config(path)
     end
 
     private
