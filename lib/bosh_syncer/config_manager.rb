@@ -1,24 +1,39 @@
+require 'yaml'
+require 'bosh_syncer/config_renderer'
+
 module BoshSyncer
   module ConfigManager
     def config_manager
-       BoshSyncer::ReleaseManager::ReleaseManager.new
+       BoshSyncer::ConfigManager::ConfigManager.new
     end
 
-    class ReleaseManager
-      def setup(config_path, target_release = FileUtils.pwd)
-        target_config_path = File.join(target_release, 'config', 'private.yml')
-        old_target_config_path = target_config_path + '.old'
-        FileUtils.mv(target_config_path, old_target_config_path) if File.exist?(target_config_path)
-        FileUtils.cp(config_path, target_config_path)
+    class ConfigManager
+      def setup(options, release_folder = Dir.pwd)
+        config_renderer = BoshSyncer::ConfigRenderer.new(options)
+        final_config_path   = File.join(release_folder, 'config', 'final.yml')
+        private_config_path = File.join(release_folder, 'config', 'private.yml')
+        save_files(final_config_path, private_config_path)
+
+        config_renderer.render_final(final_config_path)
+        config_renderer.render_private(private_config_path)
 
         yield
 
-        if File.exist?(old_target_config_path)
-          FileUtils.mv(old_target_config_path, target_config_path)
-        else 
-          FileUtils.rm(target_config_path)
-        end
+        restore_files(final_config_path, private_config_path)
+      end
+
+      def save_files(*args)
+        args.each { |path| mv(path, "#{path}.old") }
+      end
+
+      def resrore_files(*args)
+        args.each { |path| mv("#{path}.old", path) }
+      end
+
+      def mv(source, target)
+        FileUtils.mv(source, target) if File.exist?(source)
       end
     end
+
   end
 end

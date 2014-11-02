@@ -33,9 +33,9 @@ module Bosh::Cli::Command
 
         blob_manager.sync
         blob_manager.print_status
-        
-        config_manager.setup(options[:config]) do
-          update_config
+
+        config_manager.setup(options) do
+          update_config!
           blob_manager.blobs_to_upload.each do |blob|
             say "Uploading blob #{blob.make_yellow}? to your blobstore."
             blob_manager.upload_blob(blob)
@@ -47,7 +47,7 @@ module Bosh::Cli::Command
     private
 
     def default_release
-      "https://github.com/cloudfoundry/cf-release.git"
+      'https://github.com/cloudfoundry/cf-release.git'
     end
 
   end
