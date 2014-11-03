@@ -2,7 +2,7 @@ require 'erb'
 require 'yaml'
 require 'bosh/template/evaluation_context'
 
-module BoshSyncer
+module BoshCacher
   class ConfigRenderer
     attr_reader :options
 
@@ -23,7 +23,7 @@ module BoshSyncer
 
     def render_example_config(path)
       hash = required_fields.slice { |r, s| r[s] = "<#{s}>" }
-      File.write(path, {'cacher': hash}.to_yaml)
+      File.write(path, {cacher: hash}.to_yaml)
     end
 
   private

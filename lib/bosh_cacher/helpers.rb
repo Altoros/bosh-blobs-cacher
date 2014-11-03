@@ -1,4 +1,4 @@
-module BoshSyncer
+module BoshCacher
   module Helpers
 
     def set_folder(folder)
