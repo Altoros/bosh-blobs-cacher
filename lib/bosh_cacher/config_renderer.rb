@@ -82,7 +82,7 @@ module BoshCacher
     def render(template_name)
       @context ||= OpenStruct.new(config)
       erb = ERB.new(load_template(provider, template_name))
-      erb.result(@context)
+      erb.result(@context.send(:binding))
     end
 
     def load_template(provider, template_name)
