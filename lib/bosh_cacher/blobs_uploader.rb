@@ -4,9 +4,6 @@ require 'bosh_cacher/config_renderer'
 module BoshCacher
   module BlobsUploader
 
-    def initialize(release)
-    end
-
     def upload_blobs_for(release)
       release = release
       blobstore = release.blobstore
