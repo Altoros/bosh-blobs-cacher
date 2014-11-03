@@ -11,4 +11,7 @@ Gem::Specification.new do |s|
   s.license     = 'MIT'
   s.add_runtime_dependency 'bosh_cli', '~> 1.2754.0'
   s.add_runtime_dependency 'git', '~> 1.2.8'
+
+  s.add_development_dependency 'rake'
+  s.add_development_dependency 'rspec'  
 end
