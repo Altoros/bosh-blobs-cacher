@@ -32,13 +32,18 @@ module BoshCacher
 
     def load_from_file
       path = options[:config]
+      say "file contnent: " + YAML.load_file(path).inspect
+      say "cacher: " + Bosh::Common.symbolize_keys(YAML.load_file(path)['cacher']).inspect
       config.merge!(Bosh::Common.symbolize_keys(YAML.load_file(path)['cacher'])) if path && File.exist?(path)
     end
 
     def load_from_environment
       environment_options = required_fields.inject({}) do |r, s|
-        r.merge!(s => ENV["#{provider}_#{s}"])
+        value = ENV["#{provider.to_s.upcase}_#{s.upcase}"] 
+        r[s.to_sym] = value if value 
+        r
       end
+      say "env options: " + environment_options.inspect
       config.merge!(Bosh::Common.symbolize_keys(environment_options))
     end
 
