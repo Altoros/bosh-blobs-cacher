@@ -26,7 +26,7 @@ module BoshCacher
         args.each { |path| mv(path, "#{path}.old") }
       end
 
-      def resrore_files(*args)
+      def restore_files(*args)
         args.each { |path| mv("#{path}.old", path) }
       end
 
