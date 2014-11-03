@@ -1,15 +1,15 @@
 require 'yaml'
-require 'bosh_syncer/config_renderer'
+require 'bosh_cacher/config_renderer'
 
-module BoshSyncer
+module BoshCacher
   module ConfigManager
     def config_manager
-       BoshSyncer::ConfigManager::ConfigManager.new
+       BoshCacher::ConfigManager::ConfigManager.new
     end
 
     class ConfigManager
       def setup(options, release_folder = Dir.pwd)
-        config_renderer = BoshSyncer::ConfigRenderer.new(options)
+        config_renderer = BoshCacher::ConfigRenderer.new(options)
         final_config_path   = File.join(release_folder, 'config', 'final.yml')
         private_config_path = File.join(release_folder, 'config', 'private.yml')
         save_files(final_config_path, private_config_path)

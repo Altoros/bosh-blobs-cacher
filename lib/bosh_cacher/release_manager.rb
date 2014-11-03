@@ -1,9 +1,9 @@
 require 'git'
 
-module BoshSyncer
+module BoshCacher
   module ReleaseManager
     def release_manager
-       BoshSyncer::ReleaseManager::ReleaseManager.new
+       BoshCacher::ReleaseManager::ReleaseManager.new
     end
 
     class ReleaseManager

@@ -1,12 +1,14 @@
-require 'bosh_syncer/release_manager'
-require 'bosh_syncer/config_manager'
-require 'bosh_syncer/config_renderer'
+$LOAD_PATH.unshift(File.expand_path('../../..', __FILE__))
+
+require 'bosh_cacher/release_manager'
+require 'bosh_cacher/config_manager'
+require 'bosh_cacher/config_renderer'
 
 module Bosh::Cli::Command
-  class Syncer < Bosh::Cli::Command::Base
-    include BoshSyncer::ConfigManager
-    include BoshSyncer::ReleaseManager
-    include BoshSyncer::Helpers
+  class Cacher < Bosh::Cli::Command::Base
+    include BoshCacher::ConfigManager
+    include BoshCacher::ReleaseManager
+    include BoshCacher::Helpers
 
     usage 'cacher'
     desc 'show bosh cache sub-commands'
@@ -50,7 +52,7 @@ module Bosh::Cli::Command
     option '--provider provider', String, '.'
     def generate_example_config(path = Dir.pwd)
       path = File.join(path, 'config.yml') if File.directory?(path)
-      config_renderer = BoshSyncer::ConfigRenderer.new(options.merge!(validate: false))
+      config_renderer = BoshCacher::ConfigRenderer.new(options.merge!(validate: false))
       config_renderer.render_example_config(path)
     end
 
