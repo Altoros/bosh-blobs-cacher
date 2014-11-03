@@ -3,6 +3,7 @@ $LOAD_PATH.unshift(File.expand_path('../../../..', __FILE__))
 require 'bosh_cacher/release_manager'
 require 'bosh_cacher/config_manager'
 require 'bosh_cacher/config_renderer'
+require 'bosh_cacher/blobs_uploader'
 require 'bosh_cacher/helpers'
 
 module Bosh::Cli::Command
@@ -40,10 +41,7 @@ module Bosh::Cli::Command
 
         config_manager.setup(options) do
           update_config!
-          blob_manager.blobs_to_upload.each do |blob|
-            say "Uploading blob #{blob.make_yellow}? to your blobstore."
-            blob_manager.upload_blob(blob)
-          end
+          BoshCacher::BlobsUploader.new(release).upload_blobs
         end
       end
     end
