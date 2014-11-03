@@ -3,6 +3,7 @@ $LOAD_PATH.unshift(File.expand_path('../../../..', __FILE__))
 require 'bosh_cacher/release_manager'
 require 'bosh_cacher/config_manager'
 require 'bosh_cacher/config_renderer'
+require 'bosh_cacher/helpers'
 
 module Bosh::Cli::Command
   class Cacher < Bosh::Cli::Command::Base
