@@ -11,6 +11,7 @@ module Bosh::Cli::Command
     include BoshCacher::ConfigManager
     include BoshCacher::ReleaseManager
     include BoshCacher::Helpers
+    include BoshCacher::BlobsUploader
 
     usage 'cacher'
     desc 'show bosh cache sub-commands'
@@ -41,7 +42,7 @@ module Bosh::Cli::Command
 
         config_manager.setup(options) do
           update_config!
-          BoshCacher::BlobsUploader.new(release).upload_blobs
+          upload_blobs_for(release)
         end
       end
     end
