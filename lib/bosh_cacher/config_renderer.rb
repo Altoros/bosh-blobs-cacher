@@ -22,8 +22,9 @@ module BoshCacher
     end
 
     def render_example_config(path)
-      hash = required_fields.slice { |r, s| r[s] = "<#{s}>" }
-      File.write(path, {cacher: hash}.to_yaml)
+      hash = required_fields.inject({}) { |r, s| r.merge!(s => "<#{s}>") }
+      hash['provider'] = provider.to_s
+      File.write(path, {'cacher' => hash}.to_yaml)
     end
 
   private
@@ -65,9 +66,14 @@ module BoshCacher
     end
 
     def provider
-      @provider ||= config[:provider] || ENV['PROVIDER'] || 
-          (warning("Provider is not specified. Going to use Openstack.") && 
-           'openstack')
+      if @provider.nil?
+        @provider = config[:provider] || ENV['provider']
+        if @provider.nil?
+          warning("provider is not specified. Going to use Openstack.")
+          @provider = 'openstack'
+        end
+      end
+      @provider.to_sym
     end
  
     def config
