@@ -85,7 +85,7 @@ module BoshCacher
     end
 
     def load_template(provider, template_name)
-      template = File.expand_path("../../templates/#{provider}/#{template_name}.yml.erb", __FILE__)
+      template = File.expand_path("../../../templates/#{provider}/#{template_name}.yml.erb", __FILE__)
       File.read(template)
     end
 
