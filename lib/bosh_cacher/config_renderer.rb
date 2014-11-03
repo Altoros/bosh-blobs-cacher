@@ -49,8 +49,6 @@ module BoshCacher
     end
 
     def required_fields
-      puts "provider: #{provider}"
-      puts "mappings: #{mappings}"
       @required_fields ||= mappings[provider]
     end
 

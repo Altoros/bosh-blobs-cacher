@@ -55,6 +55,7 @@ module Bosh::Cli::Command
       path = File.join(path, 'config.yml') if File.directory?(path)
       config_renderer = BoshCacher::ConfigRenderer.new(options.merge!(validate: false))
       config_renderer.render_example_config(path)
+      say "Example config is generated to #{path}."
     end
 
     private
