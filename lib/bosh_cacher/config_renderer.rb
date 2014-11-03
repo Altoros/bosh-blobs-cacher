@@ -30,14 +30,14 @@ module BoshCacher
 
     def load_from_file
       path = options[:config]
-      config.merge!(YAML.load_file(path)['cacher']) if path && File.exist?(path)
+      config.merge!(Bosh::Common.symbolize_keys(YAML.load_file(path)['cacher'])) if path && File.exist?(path)
     end
 
     def load_from_environment
       environment_options = required_fields.inject({}) do |r, s|
         r.merge!(s => ENV["#{provider}_#{s}"])
       end
-      config.merge!(environment_options)
+      config.merge!(Bosh::Common.symbolize_keys(environment_options))
     end
 
     def validate!
@@ -48,12 +48,14 @@ module BoshCacher
     end
 
     def required_fields
+      puts "provider: #{provider}"
+      puts "mappings: #{mappings}"
       @required_fields ||= mappings[provider]
     end
 
     # https://github.com/cloudfoundry/bosh/blob/master/bosh_cli/lib/cli/release.rb#L69-L75
     def mappings
-      @mapping = {
+      @mapping ||= {
         openstack: %w(auth_url username password tenant region container),
         hp: %w(access_key secret_key tenant zone container),
         rackspace: %w(username password region container),
@@ -63,7 +65,7 @@ module BoshCacher
     end
 
     def provider
-      @provider ||= options[:provider] || config[:provider] || ENV['PROVIDER']
+      @provider ||= config[:provider] || ENV['PROVIDER'] || 
           (warning("Provider is not specified. Going to use Openstack.") && 
            'openstack')
     end
