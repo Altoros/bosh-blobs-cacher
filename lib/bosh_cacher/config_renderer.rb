@@ -1,6 +1,7 @@
 require 'erb'
 require 'yaml'
-require 'bosh/template/evaluation_context'
+require 'ostruct'
+# require 'bosh/template/evaluation_context'
 
 module BoshCacher
   class ConfigRenderer
@@ -79,9 +80,9 @@ module BoshCacher
     end
 
     def render(template_name)
-      @context ||= Bosh::Template::EvaluationContext.new(config)
+      @context ||= OpenStruct.new(config)
       erb = ERB.new(load_template(provider, template_name))
-      result = erb.result(@context.get_binding)
+      erb.result(@context)
     end
 
     def load_template(provider, template_name)
